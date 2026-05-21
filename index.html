@@ -301,7 +301,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--t1);min-hei
     showApp();
   };
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       userKey = 'users/' + user.uid;
       const ub = document.getElementById('ubar');
@@ -1235,13 +1235,7 @@ function exportXlsx(){const rows=[...txns].sort((a,b)=>new Date(b.date)-new Date
 let isDark=true;
 function toggleTheme(){isDark=!isDark;if(!isDark){document.documentElement.style.setProperty('--bg','#F0F4F8');document.documentElement.style.setProperty('--bg2','#E8EDF2');document.documentElement.style.setProperty('--bg3','#DDE3EA');document.documentElement.style.setProperty('--card','#FFFFFF');document.documentElement.style.setProperty('--card2','#F5F7FA');document.documentElement.style.setProperty('--border','rgba(0,0,0,0.08)');document.documentElement.style.setProperty('--border2','rgba(0,0,0,0.15)');document.documentElement.style.setProperty('--t1','#0F172A');document.documentElement.style.setProperty('--t2','#475569');document.documentElement.style.setProperty('--t3','#94A3B8');document.documentElement.style.setProperty('--green','#059669');document.documentElement.style.setProperty('--gd','#047857');document.documentElement.style.setProperty('--gl','rgba(5,150,105,0.08)');document.documentElement.style.setProperty('--gll','rgba(5,150,105,0.04)');document.documentElement.style.setProperty('--red','#DC2626');document.documentElement.style.setProperty('--blue','#1D4ED8');document.documentElement.style.setProperty('--amber','#D97706');document.getElementById('theme-lbl').textContent='מצב כהה';localStorage.setItem('kc3_th','light');}else{document.documentElement.removeAttribute('style');document.getElementById('theme-lbl').textContent='מצב בהיר';localStorage.setItem('kc3_th','dark');}Chart.defaults.color=isDark?'#4A6480':'#64748B';}
 
-async function initApp(){
-  loadChecking();
-  initLock();
-
-  // טען מיידית מ-localStorage
-  load();
-
+function setupUI(){
   if(localStorage.getItem('kc3_th')==='light'){isDark=true;toggleTheme();}
   const today=new Date();
   document.getElementById('t-date').value=today.toISOString().split('T')[0];
@@ -1250,48 +1244,63 @@ async function initApp(){
   const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
   document.getElementById('dash-date').textContent=days[today.getDay()]+', '+today.toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
   Chart.defaults.color='#4A6480';
-  renderAll();
   document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
+}
 
-  // סנכרן Firebase ברקע
+function applyData(fbData){
+  if(!fbData) return false;
+  let changed=false;
+  if(fbData.txns && fbData.txns.length>0){txns=fbData.txns;changed=true;}
+  if(fbData.budgets && Object.keys(fbData.budgets).length>0){budgets=fbData.budgets;changed=true;}
+  if(fbData.savGoal){savGoal=fbData.savGoal;changed=true;}
+  if(fbData.recurring && fbData.recurring.length>0){recurring=fbData.recurring;changed=true;}
+  if(fbData.investments && fbData.investments.length>0){investments=fbData.investments;changed=true;}
+  if(fbData.checkingData && fbData.checkingData.opening){checkingData=fbData.checkingData;changed=true;}
+  return changed;
+}
+
+function backupToLocal(){
+  try{
+    localStorage.setItem('kc3_t',JSON.stringify(txns));
+    localStorage.setItem('kc3_b',JSON.stringify(budgets));
+    localStorage.setItem('kc3_g',String(savGoal));
+    localStorage.setItem('kc3_r',JSON.stringify(recurring));
+    localStorage.setItem('kc3_i',JSON.stringify(investments));
+    localStorage.setItem('kc3_ck',JSON.stringify(checkingData));
+  }catch(e){}
+}
+
+async function initApp(){
+  loadChecking();
+  initLock();
+  setupUI();
+
+  // שלב 1: הצג מיד מ-localStorage (אפס המתנה)
+  load();
+  renderAll();
+
+  // שלב 2: טען מ-Firebase (ברקע, אחרי auth)
   if(window.firebaseLoad){
     try{
       const fbData = await window.firebaseLoad();
-      if(fbData){
-        // קח את הנתונים הגדולים יותר (Firebase או localStorage)
-        if(fbData.txns && fbData.txns.length > 0) txns = fbData.txns;
-        if(fbData.budgets) budgets = fbData.budgets;
-        if(fbData.savGoal) savGoal = fbData.savGoal;
-        if(fbData.recurring && fbData.recurring.length > 0) recurring = fbData.recurring;
-        if(fbData.investments && fbData.investments.length > 0) investments = fbData.investments;
-        if(fbData.checkingData && fbData.checkingData.opening) checkingData = fbData.checkingData;
+      if(applyData(fbData)){
+        backupToLocal();
         renderAll();
-        // שמור לlocal לגיבוי
-        try{
-          localStorage.setItem('kc3_t',JSON.stringify(txns));
-          localStorage.setItem('kc3_b',JSON.stringify(budgets));
-          localStorage.setItem('kc3_g',String(savGoal));
-          localStorage.setItem('kc3_r',JSON.stringify(recurring));
-          localStorage.setItem('kc3_i',JSON.stringify(investments));
-          localStorage.setItem('kc3_ck',JSON.stringify(checkingData));
-        }catch(e){}
         const si=document.createElement('div');
         si.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,229,160,0.15);border:1px solid rgba(0,229,160,0.3);color:#00E5A0;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;z-index:999;direction:rtl;white-space:nowrap';
         si.textContent='☁️ סונכרן מהענן';
         document.body.appendChild(si);
         setTimeout(()=>si.remove(),2000);
       }
-    }catch(e){ console.warn('Firebase sync error:',e); }
+    }catch(e){ console.warn('Firebase load error:',e); }
   }
 }
 
-// Wait for Firebase or start immediately
+// Firebase מפעיל את initApp ברגע שהauth מוכן (onAuthStateChanged → showApp)
 if(window.firebaseReady){
   initApp();
 } else {
   window._initPending = initApp;
-  // Fallback if Firebase takes too long
-  setTimeout(()=>{ if(!window.firebaseReady){ load(); window._initPending = null; initApp(); } }, 3000);
 }
 </script>
 </body>
