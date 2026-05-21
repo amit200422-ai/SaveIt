@@ -236,18 +236,6 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .lock-input{width:100%;padding:12px 16px;border:1.5px solid var(--border2);border-radius:var(--rm);background:var(--bg3);color:var(--t1);font-size:15px;outline:none;font-family:'Heebo',sans-serif;text-align:center;margin-bottom:10px;letter-spacing:2px}
 .lock-input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--gl)}
 .lock-err{font-size:12px;color:var(--red);min-height:16px;margin-bottom:8px}
-
-.checking-card{background:linear-gradient(135deg,#0d2d5e,#1a4a8a);border:1px solid rgba(77,159,255,0.25);border-radius:var(--r);padding:1.4rem 1.6rem;margin-bottom:1.2rem;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.3);display:none}
-.ck-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
-.ck-bank{font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:1px}
-.ck-edit{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:'Heebo',sans-serif}
-.ck-edit:hover{background:rgba(255,255,255,0.2);color:white}
-.ck-lbl{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:5px}
-.ck-bal{font-size:36px;font-weight:900;color:white;letter-spacing:-1px;line-height:1}
-.ck-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px}
-.ck-flow{display:flex;gap:1.2rem;margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);flex-wrap:wrap}
-.ck-fi{display:flex;align-items:center;gap:6px;font-size:12px}
-.ck-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 </style>
 <link rel="manifest" id="pwa-manifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -400,25 +388,10 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--t1);min-hei
   <div class="ph">
     <div><div class="pt">שלום 👋</div><div class="pt-sub" id="dash-date"></div></div>
     <div style="display:flex;align-items:center;gap:8px">
-      <button class="btn btn-sm" onclick="openCheckingModal()" style="font-size:11px;color:var(--blue);border-color:rgba(77,159,255,0.3)">🏦 הגדר עו"ש</button>
       <select id="dash-month" onchange="onDashMonthChange()" style="padding:8px 12px;border:1.5px solid var(--border2);border-radius:var(--rm);background:var(--bg3);color:var(--t1);font-size:13px;font-family:'Heebo',sans-serif">
         <option value="current">📅 החודש הנוכחי</option>
         <option value="all">🗓 כל הזמנים</option>
       </select>
-    </div>
-  </div>
-  <div class="checking-card" id="checking-card">
-    <div class="ck-top">
-      <div class="ck-bank">🏦 <span id="ck-bank-name">מזרחי טפחות</span> — עו"ש</div>
-      <button class="ck-edit" onclick="openCheckingModal()">✏️ עדכן יתרת פתיחה</button>
-    </div>
-    <div class="ck-lbl">יתרה נוכחית משוערת</div>
-    <div class="ck-bal" id="ck-bal">₪0</div>
-    <div class="ck-sub" id="ck-sub"></div>
-    <div class="ck-flow">
-      <div class="ck-fi"><div class="ck-dot" style="background:#00E5A0"></div><span style="color:rgba(255,255,255,0.5)">הכנסות:</span><span style="color:#00E5A0;font-weight:700" id="ck-inc">₪0</span></div>
-      <div class="ck-fi"><div class="ck-dot" style="background:#FF5370"></div><span style="color:rgba(255,255,255,0.5)">הוצאות:</span><span style="color:#FF5370;font-weight:700" id="ck-exp">₪0</span></div>
-      <div class="ck-fi"><div class="ck-dot" style="background:#FFB830"></div><span style="color:rgba(255,255,255,0.5)">חיסכון:</span><span style="color:#FFB830;font-weight:700" id="ck-sav">₪0</span></div>
     </div>
   </div>
   <div class="bstrip" id="bs"></div>
@@ -629,26 +602,6 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </div>
 
 
-
-<div class="modal-bg" id="checking-modal"><div class="modal">
-  <div class="modal-t">הגדרת יתרת עו"ש</div>
-  <div style="font-size:13px;color:var(--t2);margin-bottom:1rem;line-height:1.7">הזן את יתרת העו"ש הנוכחית שלך מהבנק.<br>המערכת תחשב אוטומטית לפי כל התנועות שרשמת.</div>
-  <div class="frow">
-    <div class="fi"><label>שם הבנק</label><select id="ck-bank-sel">
-      <option>מזרחי טפחות</option><option>לאומי</option><option>הפועלים</option><option>דיסקונט</option><option>בינלאומי</option><option>אחר</option>
-    </select></div>
-  </div>
-  <div class="frow">
-    <div class="fi"><label>יתרת פתיחה (₪)</label><input type="number" id="ck-opening" placeholder="0" inputmode="decimal"></div>
-    <div class="fi"><label>תאריך יתרת פתיחה</label><input type="date" id="ck-date"></div>
-  </div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:10px">* הזן את היתרה האמיתית מהבנק — המערכת תחשב מכאן</div>
-  <div class="modal-act">
-    <button class="btn" onclick="closeModal('checking-modal')">ביטול</button>
-    <button class="btn btn-g" onclick="saveChecking()">שמור</button>
-  </div>
-</div></div>
-
 <!-- MODALS -->
 <div class="modal-bg" id="edit-modal"><div class="modal">
   <div class="modal-t">עריכת תנועה</div>
@@ -727,61 +680,22 @@ const DINV=[
   {id:3,name:'קרן השתלמות',type:'savings_plan',currency:'ILS',cost:15000,history:[{month:'2026-02',value:15800},{month:'2026-03',value:16100},{month:'2026-04',value:16400}]}
 ];
 
-
-// ─── CHECKING ACCOUNT ─────────────────────────────────────────────────────
-var checkingData={bank:'מזרחי טפחות',opening:0,openingDate:''};
-function loadChecking(){try{var s=localStorage.getItem('kc3_ck');if(s)checkingData=JSON.parse(s);}catch(e){}}
-function saveCheckingLocal(){try{localStorage.setItem('kc3_ck',JSON.stringify(checkingData));}catch(e){}}
-
-function openCheckingModal(){
-  document.getElementById('ck-bank-sel').value=checkingData.bank||'מזרחי טפחות';
-  document.getElementById('ck-opening').value=checkingData.opening||'';
-  document.getElementById('ck-date').value=checkingData.openingDate||new Date().toISOString().split('T')[0];
-  document.getElementById('checking-modal').classList.add('show');
-}
-function saveChecking(){
-  checkingData.bank=document.getElementById('ck-bank-sel').value;
-  checkingData.opening=parseFloat(document.getElementById('ck-opening').value)||0;
-  checkingData.openingDate=document.getElementById('ck-date').value;
-  saveCheckingLocal();save();closeModal('checking-modal');renderCheckingBalance();
-  toast('✓ יתרת עו"ש עודכנה','green');
-}
-function renderCheckingBalance(){
-  var card=document.getElementById('checking-card');
-  if(!card)return;
-  if(!checkingData.opening){card.style.display='none';return;}
-  card.style.display='block';
-  var od=checkingData.openingDate;
-  var rel=txns.filter(function(t){return !od||t.date>=od;});
-  var inc=rel.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+t.amount;},0);
-  var exp=rel.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+t.amount;},0);
-  var sav=rel.filter(function(t){return t.type==='savings';}).reduce(function(s,t){return s+t.amount;},0);
-  var bal=checkingData.opening+inc-exp-sav;
-  document.getElementById('ck-bank-name').textContent=checkingData.bank;
-  document.getElementById('ck-bal').textContent=fmt(bal);
-  document.getElementById('ck-bal').style.color=bal>=0?'white':'#FF5370';
-  document.getElementById('ck-inc').textContent='+'+fmt(inc);
-  document.getElementById('ck-exp').textContent='-'+fmt(exp);
-  document.getElementById('ck-sav').textContent='-'+fmt(sav);
-  document.getElementById('ck-sub').textContent=od?'יתרת פתיחה '+checkingData.opening.toLocaleString('he-IL')+'₪ בתאריך '+od:'';
-}
 function save(){
-  try{localStorage.setItem('kc3_t',JSON.stringify(txns));localStorage.setItem('kc3_b',JSON.stringify(budgets));localStorage.setItem('kc3_g',String(savGoal));localStorage.setItem('kc3_r',JSON.stringify(recurring));localStorage.setItem('kc3_i',JSON.stringify(investments));}catch(e){}
-  // Save to Firebase
+  try{
+    localStorage.setItem('kc3_t',JSON.stringify(txns));
+    localStorage.setItem('kc3_b',JSON.stringify(budgets));
+    localStorage.setItem('kc3_g',String(savGoal));
+    localStorage.setItem('kc3_r',JSON.stringify(recurring));
+    localStorage.setItem('kc3_i',JSON.stringify(investments));
+    if(typeof checkingData!=='undefined') localStorage.setItem('kc3_ck',JSON.stringify(checkingData));
+  }catch(e){}
   if(window.firebaseSave){
-    window.firebaseSave({txns,budgets,savGoal,recurring,investments});
+    const p={txns,budgets,savGoal,recurring,investments};
+    if(typeof checkingData!=='undefined') p.checkingData=checkingData;
+    window.firebaseSave(p);
   }
 }
-function load(){
-  try{
-    const t=localStorage.getItem('kc3_t');txns=t?JSON.parse(t):JSON.parse(JSON.stringify(DTXNS));
-    const b=localStorage.getItem('kc3_b');budgets=b?JSON.parse(b):{};
-    const g=localStorage.getItem('kc3_g');savGoal=g?parseFloat(g):10000;
-    const r=localStorage.getItem('kc3_r');recurring=r?JSON.parse(r):JSON.parse(JSON.stringify(DREC));
-    const i=localStorage.getItem('kc3_i');investments=i?JSON.parse(i):JSON.parse(JSON.stringify(DINV));
-    const ck=localStorage.getItem('kc3_ck');if(ck&&typeof checkingData!=='undefined')checkingData=JSON.parse(ck);
-  }catch(e){txns=JSON.parse(JSON.stringify(DTXNS));recurring=JSON.parse(JSON.stringify(DREC));investments=JSON.parse(JSON.stringify(DINV));budgets={};}
-}
+function load(){try{const t=localStorage.getItem('kc3_t');txns=t?JSON.parse(t):JSON.parse(JSON.stringify(DTXNS));const b=localStorage.getItem('kc3_b');budgets=b?JSON.parse(b):{};const g=localStorage.getItem('kc3_g');savGoal=g?parseFloat(g):10000;const r=localStorage.getItem('kc3_r');recurring=r?JSON.parse(r):JSON.parse(JSON.stringify(DREC));const i=localStorage.getItem('kc3_i');investments=i?JSON.parse(i):JSON.parse(JSON.stringify(DINV));}catch(e){txns=JSON.parse(JSON.stringify(DTXNS));recurring=JSON.parse(JSON.stringify(DREC));investments=JSON.parse(JSON.stringify(DINV));budgets={};}}
 
 function fmt(n){return '₪'+Math.round(n).toLocaleString('he-IL');}
 function mk(d){return d.slice(0,7);}
@@ -817,7 +731,7 @@ function nav(page,btn){
   if(fns[page])setTimeout(fns[page],50);
 }
 
-function renderAll(){populateDashMonth();renderCheckingBalance();renderBalance();renderMainStats();renderDashCats();renderDashTop5();renderRecent();renderTxns();renderSavings();renderRecurring();renderBudget();renderTips();populateMonthFilter();save();}
+function renderAll(){populateDashMonth();renderBalance();renderMainStats();renderDashCats();renderDashTop5();renderRecent();renderTxns();renderSavings();renderRecurring();renderBudget();renderTips();populateMonthFilter();save();}
 
 function renderBalance(){
   const mt=curMt();
@@ -916,17 +830,7 @@ function buildStkCharts(){const byType={};investments.forEach(i=>{byType[i.type]
   const c2=document.getElementById('stk-perf')?.getContext('2d');if(c2){if(sPerf)sPerf.destroy();const allM=[...new Set(investments.flatMap(i=>(i.history||[]).map(h=>h.month)))].sort().slice(-12);if(allM.length>1){const tots=allM.map(m=>investments.reduce((s,i)=>{const h=(i.history||[]).find(h=>h.month===m);const cv=iCurVal(i);return s+(h?(i.currency==='USD'?h.value*USD:h.value):(i.currency==='USD'?cv*USD:cv));},0));const HE=['','ינו','פבר','מרץ','אפר','מאי','יונ','יול','אוג','ספט','אוק','נוב','דצמ'];sPerf=new Chart(c2,{type:'line',data:{labels:allM.map(m=>{const p=m.split('-');return HE[parseInt(p[1])]+' '+p[0].slice(2);}),datasets:[{data:tots,borderColor:'#4D9FFF',backgroundColor:'rgba(77,159,255,.08)',fill:true,pointBackgroundColor:'#4D9FFF',pointRadius:4,tension:0.4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₪'+Math.round(v/1000)+'K',font:{size:10},color:'#4A6480'},grid:{color:'rgba(255,255,255,.04)'},border:{display:false}},x:{ticks:{font:{size:10},color:'#4A6480'},grid:{display:false},border:{display:false}}}}});}}}
 
 function renderNetWorth(){const allSav=txns.filter(t=>t.type==='savings').reduce((s,t)=>s+t.amount,0),stkVal=investments.reduce((s,i)=>s+iILS(i),0),stkCost=investments.reduce((s,i)=>s+(i.cost||0),0),mt=curMt(),cash=Math.max(0,mt.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0)-mt.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0)-mt.filter(t=>t.type==='savings').reduce((s,t)=>s+t.amount,0)),total=allSav+stkVal+cash,stkPnL=stkVal-stkCost;document.getElementById('nw-stats').innerHTML='<div class="sc sc-glow"><div class="sl">שווי נטו כולל</div><div class="sv g">'+fmt(total)+'</div><div class="ss">כל הנכסים ביחד</div></div><div class="sc"><div class="sl">רווח השקעות</div><div class="sv '+(stkPnL>=0?'g':'r')+'">'+(stkPnL>=0?'+':'')+fmt(stkPnL)+'</div></div><div class="sc"><div class="sl">% השקעות מהנכסים</div><div class="sv">'+(total>0?Math.round(stkVal/total*100):0)+'%</div></div>';
-  // עו"ש דינמי
-  var ckBal=cash;
-  if(typeof checkingData!=='undefined'&&checkingData.opening){
-    var od=checkingData.openingDate;
-    var rel=txns.filter(function(t){return !od||t.date>=od;});
-    var ckI=rel.filter(function(t){return t.type==='income';}).reduce(function(s,t){return s+t.amount;},0);
-    var ckE=rel.filter(function(t){return t.type==='expense';}).reduce(function(s,t){return s+t.amount;},0);
-    var ckS=rel.filter(function(t){return t.type==='savings';}).reduce(function(s,t){return s+t.amount;},0);
-    ckBal=checkingData.opening+ckI-ckE-ckS;
-  }
-  const items=[{label:'כיס חיסכון',value:allSav,color:'#00E5A0',sub:'כסף שהפרשת לחיסכון'},{label:'תיק השקעות',value:stkVal,color:'#4D9FFF',sub:investments.length+' השקעות'},{label:'עו"ש',value:ckBal,color:'#FFB830',sub:typeof checkingData!=='undefined'&&checkingData.bank?checkingData.bank:'יתרה דינמית'}];
+  const items=[{label:'כיס חיסכון',value:allSav,color:'#00E5A0',sub:'כסף שהפרשת לחיסכון'},{label:'תיק השקעות',value:stkVal,color:'#4D9FFF',sub:investments.length+' השקעות'},{label:'מזומן פנוי',value:cash,color:'#FFB830',sub:'הכנסות פחות הוצאות'}];
   document.getElementById('nw-breakdown').innerHTML=items.map(item=>{const pct=total>0?Math.round(item.value/total*100):0;return'<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:'+item.color+';margin-left:8px"></span>'+item.label+'</span><span><strong>'+fmt(item.value)+'</strong> <span style="color:var(--t3)">('+pct+'%)</span></span></div><div class="cbg"><div class="cbb" style="width:'+pct+'%;background:'+item.color+'"></div></div><div style="font-size:11px;color:var(--t3);margin-top:3px">'+item.sub+'</div></div>';}).join('');
   const c=document.getElementById('nw-donut')?.getContext('2d');if(c){if(nwDon)nwDon.destroy();const vals=items.map(i=>Math.max(0,i.value));if(vals.some(v=>v>0)){nwDon=new Chart(c,{type:'doughnut',data:{labels:items.map(i=>i.label),datasets:[{data:vals,backgroundColor:items.map(i=>i.color),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});document.getElementById('nw-dleg').innerHTML=items.map(item=>'<div class="dli"><span class="dd" style="background:'+item.color+'"></span><span>'+item.label+'</span><span style="margin-right:auto;font-weight:700">'+fmt(item.value)+'</span></div>').join('');}}
   document.getElementById('nw-detail').innerHTML='<div style="display:flex;flex-direction:column;gap:8px;font-size:13px"><div style="display:flex;justify-content:space-between;padding:10px 12px;background:rgba(0,229,160,.08);border-radius:var(--rs);border:1px solid rgba(0,229,160,.15)"><span style="color:var(--green);font-weight:700">סה"כ נכסים</span><strong style="color:var(--green)">'+fmt(total)+'</strong></div>'+items.map(i=>'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg3);border-radius:var(--rs)"><span style="color:var(--t2)">'+i.label+'</span><span style="font-weight:700">'+fmt(i.value)+'</span></div>').join('')+'<div style="display:flex;justify-content:space-between;padding:10px 12px;background:rgba('+(stkPnL>=0?'0,229,160':'255,83,112')+',.08);border-radius:var(--rs)"><span style="font-weight:700;color:'+(stkPnL>=0?'var(--green)':'var(--red)')+'">רווח/הפסד השקעות</span><strong style="color:'+(stkPnL>=0?'var(--green)':'var(--red)')+'">'+(stkPnL>=0?'+':'')+fmt(stkPnL)+'</strong></div></div>';}
@@ -1331,11 +1235,11 @@ function exportXlsx(){const rows=[...txns].sort((a,b)=>new Date(b.date)-new Date
 let isDark=true;
 function toggleTheme(){isDark=!isDark;if(!isDark){document.documentElement.style.setProperty('--bg','#F0F4F8');document.documentElement.style.setProperty('--bg2','#E8EDF2');document.documentElement.style.setProperty('--bg3','#DDE3EA');document.documentElement.style.setProperty('--card','#FFFFFF');document.documentElement.style.setProperty('--card2','#F5F7FA');document.documentElement.style.setProperty('--border','rgba(0,0,0,0.08)');document.documentElement.style.setProperty('--border2','rgba(0,0,0,0.15)');document.documentElement.style.setProperty('--t1','#0F172A');document.documentElement.style.setProperty('--t2','#475569');document.documentElement.style.setProperty('--t3','#94A3B8');document.documentElement.style.setProperty('--green','#059669');document.documentElement.style.setProperty('--gd','#047857');document.documentElement.style.setProperty('--gl','rgba(5,150,105,0.08)');document.documentElement.style.setProperty('--gll','rgba(5,150,105,0.04)');document.documentElement.style.setProperty('--red','#DC2626');document.documentElement.style.setProperty('--blue','#1D4ED8');document.documentElement.style.setProperty('--amber','#D97706');document.getElementById('theme-lbl').textContent='מצב כהה';localStorage.setItem('kc3_th','light');}else{document.documentElement.removeAttribute('style');document.getElementById('theme-lbl').textContent='מצב בהיר';localStorage.setItem('kc3_th','dark');}Chart.defaults.color=isDark?'#4A6480':'#64748B';}
 
-async function initApp(){loadChecking();
-  loadSubs();loadChecking();loadBanks();
+async function initApp(){
+  loadChecking();
   initLock();
 
-  // ── טען מיידית מ-localStorage ──────────────────────────────────────────
+  // טען מיידית מ-localStorage
   load();
 
   if(localStorage.getItem('kc3_th')==='light'){isDark=true;toggleTheme();}
@@ -1349,29 +1253,35 @@ async function initApp(){loadChecking();
   renderAll();
   document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
 
-  // ── סנכרן Firebase ברקע — ללא חסימה ───────────────────────────────────
+  // סנכרן Firebase ברקע
   if(window.firebaseLoad){
     try{
       const fbData = await window.firebaseLoad();
-      if(fbData && fbData.txns && fbData.txns.length >= txns.length){
-        txns = fbData.txns || [];
-        budgets = fbData.budgets || {};
-        savGoal = fbData.savGoal || 10000;
-        recurring = fbData.recurring || [];
-        investments = fbData.investments || [];
-        if(fbData.checkingData) checkingData = fbData.checkingData;
-        if(fbData.bankAccts) bankAccts = fbData.bankAccts;
-        if(fbData.subscriptions) subscriptions = fbData.subscriptions;
+      if(fbData){
+        // קח את הנתונים הגדולים יותר (Firebase או localStorage)
+        if(fbData.txns && fbData.txns.length > 0) txns = fbData.txns;
+        if(fbData.budgets) budgets = fbData.budgets;
+        if(fbData.savGoal) savGoal = fbData.savGoal;
+        if(fbData.recurring && fbData.recurring.length > 0) recurring = fbData.recurring;
+        if(fbData.investments && fbData.investments.length > 0) investments = fbData.investments;
+        if(fbData.checkingData && fbData.checkingData.opening) checkingData = fbData.checkingData;
         renderAll();
-        // Save merged data back to localStorage
-        save();
+        // שמור לlocal לגיבוי
+        try{
+          localStorage.setItem('kc3_t',JSON.stringify(txns));
+          localStorage.setItem('kc3_b',JSON.stringify(budgets));
+          localStorage.setItem('kc3_g',String(savGoal));
+          localStorage.setItem('kc3_r',JSON.stringify(recurring));
+          localStorage.setItem('kc3_i',JSON.stringify(investments));
+          localStorage.setItem('kc3_ck',JSON.stringify(checkingData));
+        }catch(e){}
         const si=document.createElement('div');
         si.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,229,160,0.15);border:1px solid rgba(0,229,160,0.3);color:#00E5A0;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;z-index:999;direction:rtl;white-space:nowrap';
         si.textContent='☁️ סונכרן מהענן';
         document.body.appendChild(si);
         setTimeout(()=>si.remove(),2000);
       }
-    }catch(e){}
+    }catch(e){ console.warn('Firebase sync error:',e); }
   }
 }
 
